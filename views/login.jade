@@ -1,0 +1,49 @@
+doctype html
+html
+    head
+        title= title
+        meta(name="viewport",content="width=device-width, initial-scale=1")
+        link(rel='stylesheet', href='http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/main.css')
+        script(src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js")
+        script(src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js")
+
+    body
+        .container
+            .row
+                .col-sm-3
+                .col-sm-6
+                    .panel.panel-primary
+                        .panel-heading
+                            span.glyphicon.glyphicon-user &nbsp;
+                            span LOGIN
+                        .panel-footer
+                            form(action="/login", id="loginForm" method="POST", data-parsley-validate)
+                                input(type="hidden", id="theme", name="theme", value="flatly")
+                                div(class="form-group")
+                                    label(for="email") Email address
+                                    input(type="email", class="form-control", id="email", name="email", placeholder="Your email address")
+                                div(class="form-group")
+                                    label(for="password") Password
+                                    input(type="password", class="form-control", id="password", name="password", placeholder="Your password")
+                                div(class="modal-footer")
+                                    label(style="float:left;") #{message}
+                                    button(type="submit", id="signupFinish" class="btn btn-primary") Login
+                                    button(type="button", onclick="window.location.href='/signup'" class="btn btn-primary") Sign up
+    .col-sm-3
+//script.
+//    $(document).ready(function () {
+//        $("#signupFinish").click(function () {
+//            console.log("AAA" + password);
+//            console.log("BBB" + passwordD);
+//
+//            if(password != passwordD) {
+//                return;
+//            }
+//            $.post("/signup", $("#signupForm").serialize(),
+//                    function (data) {
+//                        $("#signupSuccess").show();
+//                    }
+//            );
+//        })
+//    })

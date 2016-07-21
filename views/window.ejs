@@ -1,0 +1,92 @@
+        <h5 style="text-align: center;">Name: <%= data.name %></h5>
+        <table>
+            <tr>
+                <td rowspan="22"><img src="<%-data.imageUrl%>"></td>
+                <td>Manufacturer:</td>
+                <td><%= data.manufacturer %></td>
+            </tr>
+            <tr>
+                <td>Web:</td>
+                <td><a href='<%= data.pageUrl %>' alt='Manufacturer Link' target='_blank'><%= data.pageUrl %></a></td>
+            </tr>
+            <tr>
+                <td>Variation:</td>
+                <td><%= data.variation %></td>
+            </tr>
+            <tr>
+                <td>Interior Color:</td>
+                <td><%= data.interiorColor %></td>
+            </tr>
+            <tr>
+                <td>Frame Width:</td>
+                <td><%= data.frameWidth %></td>
+            </tr>
+            <tr>
+                <td>Frame Depth:</td>
+                <td><%= data.frameDepth %></td>
+            </tr>
+            <tr>
+                <td>Frame Height:</td>
+                <td><%= data.frameHeight %></td>
+            </tr>
+            <tr>
+                <td>Rough Opening Dimension:</td>
+                <td><%= data.roughOpeningDimensions %></td>
+            </tr>
+            <tr>
+                <td>Glazing Type:</td>
+                <td><%= data.glazingType %></td>
+            </tr>
+            <tr>
+                <td>U Factor: </td>
+                <td><%= data.UFactor %></td>
+            </tr>
+            <tr>
+                <td>Visible Light VT Rating: </td>
+                <td><%= data.VisibleLightVTRating %></td>
+            </tr>
+            <tr>
+                <td>Solar Heat Gain Coefficient:</td>
+                <td><%= data.solarHeatGainCoefficient %></td>
+            </tr>
+            <tr>
+                <td>Energy Star Qualified:</td>
+                <td> <%= data.energyStarQualified %></td>
+            </tr>
+            <tr>
+                <td>NailFin/Pocket:</td>
+                <td><%= data.nailFinOrPocket %></td>
+            </tr>
+            <tr>
+                <td>Handle Type:</td>
+                <td> <%= data.handleType %></td>
+            </tr>
+            <tr>
+                <td>Sash Material:</td>
+                <td> <%= data.sashMaterial %></td>
+            </tr>
+            <tr>
+                <td>Screen Material :</td>
+                <td> <%= data.screenMaterial %></td>
+            </tr>
+            <tr>
+                <td>Screen Color:</td>
+                <td> <%= data.screenColor %></td>
+            </tr>
+            <tr>
+                <td>Warranty: </td>
+                <td><%= data.productWarranty %></td>
+            </tr>
+            <tr>
+                <td>Glass Warranty:</td>
+                <td> <%= data.glassWarranty %></td>
+            </tr>
+            <tr>
+                <td>Weight LBS:</td>
+                <td><%= data.weightLBS %></td>
+            </tr>
+            <tr>
+                <td>Special Features:</td>
+                <td> <%= data.specialFeatures %></td>
+            </tr>
+</table>

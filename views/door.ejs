@@ -1,0 +1,94 @@
+<h5 style="text-align: center;">Name: <%= data.name %></h1>
+<table>
+    <tr>
+        <td rowspan="22"><img src="<%-data.imageUrl%>"></td>
+        <td>Material:</td>
+        <td> <%= data.doorMaterial %></td>
+    </tr>
+    <%if(data.size != undefined) {%>
+        <tr>
+            <td>Size: </td>
+            <td><%= data.size %></td>
+        </tr>
+    <%}%>
+    <tr>
+        <td>Manufacturer:</td>
+        <td> <%= data.manufacturer %></td>
+    </tr>
+    <tr>
+        <td>Web:</td>
+        <td><a href='<%= data.pageUrl %>' alt='Manufacturer Link' target='_blank'><%= data.pageUrl %></a></td>
+    </tr>
+    <tr>
+        <td>Color: </td>
+        <td><%= data.woodSpecies %></td>
+    </tr>
+    <tr>
+        <td>Type: </td>
+        <td><%= data.type %></td>
+    </tr>
+    <tr>
+        <td>Style:</td>
+        <td><%= data.style %></td>
+    </tr>
+    <tr>
+        <td>Core: </td>
+        <td><%= data.core %></td>
+    </tr>
+    <tr>
+        <td>Construction: </td>
+        <td><%= data.construction %></td>
+    </tr>
+    <tr>
+        <td>Glass Type: </td>
+        <td><%= data.glassType %></td>
+    </tr>
+    <tr>
+        <td>Glass Style:</td>
+        <td> <%= data.glassStyle %></td>
+    </tr>
+    <tr>
+        <td>Glass Thickness: </td>
+        <td><%= data.glassThickness %></td>
+    </tr>
+    <tr>
+        <td>Finished:</td>
+        <td> <%= data.finished %></td>
+    </tr>
+    <tr>
+        <td>Paintable:</td>
+        <td> <%= data.paintable %></td>
+    </tr>
+    <tr>
+        <td>Stainable:</td>
+        <td> <%= data.stainable %></td>
+    </tr>
+    <tr>
+        <td>Fire Rating:</td>
+        <td> <%= data.fireRating %></td>
+    </tr>
+    <tr>
+        <td>Hurricane Rated ? :</td>
+        <td> <%= data.hurricaneRated %></td>
+    </tr>
+    <tr>
+        <td>FSC Certified:</td>
+        <td> <%= data.FSCCertified %></td>
+    </tr>
+    <tr>
+        <td>Warranty:</td>
+        <td> <%= data.warranty %></td>
+    </tr>
+    <tr>
+        <td>Door Handling:</td>
+        <td> <%= data.handing %></td>
+    </tr>
+    <tr>
+        <td>Panels:</td>
+        <td> <%= data.panels %></td>
+    </tr>
+    <tr>
+        <td>Rough Opening:</td>
+        <td> <%= data.RoughOpeningDimensions %> </td>
+    </tr>
+ </table>
