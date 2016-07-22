@@ -41,7 +41,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Added code..
 //////////////////////////////////////////////////////////////////
 // Initialize..
-var CONN_STRING = "mongodb://localhost:27017/proquerio";
+// var CONN_STRING = "mongodb://localhost:27017/proquerio";
+var CONN_STRING = "mongodb://dev:dev@ds049854.mlab.com:49854/proquerio";
 
 // Connect db..
 mongoose.connect(CONN_STRING);
