@@ -14,7 +14,6 @@ html
         link(rel='stylesheet', href='/css/messenger.css')
         link(rel='stylesheet', href='/css/messenger-theme-flat.css')
 
-
         .container
             .row
                 .col-sm-3
@@ -26,8 +25,8 @@ html
                             .msg-list-body.user-content
                                 ul
                                     li(style="display:none;")
-                                        a(href="#")
-                                            img.img-thumbnail(src="/images/5.jpg")
+                                        div(href="#", type="checkbox" onclick="javascript:changeUser();")
+                                            img.img-thumbnail(src="/images/man.png")
                                             span
 
                         .panel-footer
@@ -51,21 +50,22 @@ html
                             span Chat_Room
                             label(style="float:right;") Hello,#{userInfo.username}!
                             span#spanuser(style="float:right;")
-                        .panel-body
+                        .panel-msgbody
                             .msg-list-body.msg-content
 
                         .panel-footer
                             input.form-controll#regname(type="hidden", value="#{userInfo.username}")
                             input.form-controll#usermail(type="hidden", value="#{userInfo.email}")
+                            textarea.form-control#msg(type="text", style="display:inline;", placeholder="Type message to send", onkeypress="javascript:keywordsMsg(event);")
                             .input-group
+                                .col-sm-12
                                 .input-group-addon
                                     a(href="#")
-                                        img(src="/images/bq.png")
+                                    img(src="/images/bq.png")
                                 .input-group-addon(style="padding-bottom:0px;")
                                     label(style="position:relative;")
                                         img(src="/images/jt.jpg",title="send images",style="cursor:pointer;")
                                         input#sendImage(type="file",value="images",style="display:none;")
-                                input.form-control#msg(type="text",placeholder="Type message to send",onkeydown="javascript:keywordsMsg(event);")
                                 span.input-group-btn
                                     button.btn.btn-primary#sendMsg(type="button") Send
 
@@ -86,7 +86,7 @@ html
                 .modal-dialog
                     .modal-content
                         .modal-header
-                            h4.modal-title#inviteLabel Invite your friend to the chat..
+                            h4.modal-title#inviteLabel Invite your friend to the chat!
                         .modal-body
                             .form-group
                                 .input-group

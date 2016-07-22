@@ -7,42 +7,84 @@
     font-size: 12px;
 }
 
-.message-time {
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* For message time.. */
+.message-username {
     height: 20px;
     line-height: 18px;
+    font-weight: bold;
+    color : #5e5e5e;
 }
-.message-receive .message-time {
-    margin-left: 60px;
-    text-align: left;
+
+.message-time {
+    height: 15px;
+    line-height: 15px;
+    color : #8794a7;
 }
+
 .message-reply{
     padding-bottom: 10px;
 }
-.message-receive{
-    padding-bottom: 10px;
-}
+
 .message-reply .message-time {
-    margin-right: 60px;
+    margin-right: 1px;
+    text-align: right;
+    font-size: 10px;
+}
+
+.message-reply .message-username {
     text-align: right;
 }
 
+.message-receive{
+    padding-bottom: 10px;
+}
+
+.message-receive .message-time {
+    margin-right: 1px;
+    text-align: left;
+    font-size: 10px;
+}
+
+.message-receive .message-username {
+    text-align: left;
+}
+
+/*.message-reply .message-time {*/
+    /*margin-right: 60px;*/
+    /*text-align: right;*/
+    /*font-size: 12px;*/
+/*}*/
+
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* For message information.. */
 .message-info {
     position: relative;
     overflow: hidden;
 }
 
+/*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* For message content.. */
 .message-content-box {
     border-radius: 5px;
     position: relative;
-    padding: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     word-break: break-word;
 }
 
 .message-reply .message-content-box {
-    background: #b8db29;
+    background: #d9edf7;
     color: #333;
     margin-right: 60px;
     float: right;
+}
+
+.message-reply .message-content-box .arrow {
+    border-color: transparent transparent transparent #d9edf7;
+    right: -20px;
 }
 
 .message-receive .message-content-box {
@@ -50,6 +92,11 @@
     color: #333;
     margin-left: 60px;
     float: left;
+}
+
+.message-receive .message-content-box .arrow {
+    border-color: transparent #EEE transparent transparent;
+    left: -20px;
 }
 
 .message-content-box .arrow {
@@ -60,16 +107,6 @@
     border-style: solid;
     position: absolute;
     top: 10px;
-}
-
-.message-reply .message-content-box .arrow {
-    border-color: transparent transparent transparent #b8db29;
-    right: -20px;
-}
-
-.message-receive .message-content-box .arrow {
-    border-color: transparent #EEE transparent transparent;
-    left: -20px;
 }
 
 .item-pics-box {
@@ -119,6 +156,7 @@
     border: 1px solid #D7D7D7;
     text-align: center;
 }
+
 .send-message .message-input-box {
     border-radius: 3px;
     background: url("./images/write.png");
@@ -130,6 +168,7 @@
     border: 1px solid #D7D7D7;
     overflow: hidden;
 }
+
 .send-message input.message-input {
     margin: 0;
     padding: 8px 0;

@@ -11,7 +11,6 @@ body{
 
 .msg-content{
 	height:500px;
-	margin: -14px;
 	overflow-x: hidden;
 	padding: 15px;
 }
@@ -44,6 +43,14 @@ body{
 }
 .panel-body{
 	height: 500px;
+	width: 100%;
+}
+.panel-userbody{
+	height: 500px;
+	width: 100%;
+}
+.panel-msgbody{
+	height: 450px;
 	width: 100%;
 }
 .user-content ul{

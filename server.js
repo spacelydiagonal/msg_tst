@@ -41,8 +41,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Added code..
 //////////////////////////////////////////////////////////////////
 // Initialize..
-// var CONN_STRING = "mongodb://localhost:27017/proquerio";
-var CONN_STRING = "mongodb://dev:dev@ds049854.mlab.com:49854/proquerio";
+var CONN_STRING = "mongodb://localhost:27017/proquerio";
+// var CONN_STRING = "mongodb://dev:dev@ds049854.mlab.com:49854/proquerio";
 
 // Connect db..
 mongoose.connect(CONN_STRING);
@@ -181,6 +181,14 @@ io.on('connection', function(socket) { //on first connection
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Receive new user, add userlist, and let others know, from client.js : socket.emit("login");
     socket.on('login', function(user){
+        /*
+        user = {
+            name : user name,
+            email : user email,
+            img : user image
+        }
+        */
+
         user.id = socket.id;
         userList.push(user);
 
@@ -269,6 +277,7 @@ io.on('connection', function(socket) { //on first connection
             img:""
          }
         */
+        console.log("image sent!");
         socket.broadcast.emit('imageToALL', msgObj);
     });
 
@@ -310,7 +319,7 @@ io.on('connection', function(socket) { //on first connection
         */
         var transport = nodemailer.createTransport('smtps://timkern0702%40gmail.com:xlazjs0702@smtp.gmail.com/?pool=true');
         var htmlLink = '<h1>Invite you to the chat!</h1><br>' + inviteInfo.from + ' sent you a invite to the chat!<br>'
-                        + '<p><button href="http://localhost:8000">Visit</button></p>';
+                        + '<p><a href="http://localhost:8000">Visit page</a></p>';
         var mailOptions = {
             // from: inviteInfo.from,
             // to: inviteInfo.to,

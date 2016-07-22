@@ -38,12 +38,23 @@ socket.on('userInfo',function(userObj){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Message from system..
 socket.on('sysInfo',function(msg){
+	/* msg : 'username' connected!*/
 	addMsgFromSys(msg);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Receive message from users, determine it from whom..
 socket.on('toAll',function(msgObj){
+	/*
+	 format:{
+		 from:{
+			 name:"",
+			 img:"",
+			 id:""
+		 },
+		 msg:""
+	 }
+	 */
 	addMsgFromUser(msgObj, false);
 });
 
@@ -75,6 +86,16 @@ socket.on('toOne',function(msgObj){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Receive image and add..
 socket.on('imageToALL', function(msgObj){
+	/*
+	 format:{
+		 from:{
+			 name:"",
+			 img:"",
+			 id:""
+		 },
+		 img:""
+	 }
+	 */
 	addImgFromUser(msgObj, false);
 });
 
@@ -95,7 +116,7 @@ socket.on('inviteResponse', function(msgObj){
     $('#inviteStatus').append(status);
     $('#inviteModel').modal('hide');
     $('#inviteEmail').val('');
-    $('#inviteStatus').val('');
+    $('#inviteStatus').html('');
     $.scojs_message("Invite successfully sent!", $.scojs_message.TYPE_OK);
 });
 
@@ -114,7 +135,7 @@ $(function(){
 	var userObj = {
 		name : $('#regname').val(),
 		email : $('#usermail').val(),
-		img : "/images/1.jpg"
+		img : "/images/man.png"
 	}
 	socket.emit("login", userObj);
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -139,7 +160,8 @@ $(function(){
     	};
     	socket.emit('toAll', msgObj);
     	addMsgFromUser(msgObj, true);
-    	$('#msg').val('');
+		$('#msg').val('');
+		$('#msg').html('');
   	});
 
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -213,28 +235,41 @@ $(function(){
 });
 
 //add message in UI
-function addImgFromUser(msgObj,isSelf){
+function addImgFromUser(msgObj, isSelf){
 	var msgType = isSelf?"message-reply":"message-receive";
-	var msgHtml = $('<div><div class="message-info"><div class="user-info"><img src="/images/1.jpg" class="user-avatar img-thumbnail"></div><div class="message-content-box"><div class="arrow"></div><div class="message-content">test</div></div></div></div>');
+	// var msgHtml = $('<div><div class="message-info"><div class="user-info"><img src="/images/1.jpg" class="user-avatar img-thumbnail"></div><div class="message-content-box"><div class="arrow"></div><div class="message-content">test</div></div></div></div>');
+    var msgHtml = $('<div><div class="message-info"><div class="user-info"><img src="/images/1.jpg" class="user-avatar img-thumbnail"></div><div class="message-content-box"><div class="arrow"></div><div class="message-username">TEST1</div><div class="message-content">test</div><div class="message-time">13:01 22/7/2016</div></div></div></div>');
+    var timeStamp = getTimeStamp();
 	msgHtml.addClass(msgType);
 	msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('src',msgObj.from.img);
-	msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('title',msgObj.from.name);
+	msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('title',msgObj.from.username);
 	msgHtml.children('.message-info').children('.message-content-box').children('.message-content').html("<img src='"+msgObj.img+"'>");
+    msgHtml.children('.message-info').children('.message-content-box').children('.message-username').text(msgObj.from.username + " say:");
+    msgHtml.children('.message-info').children('.message-content-box').children('.message-time').text(timeStamp);
 	$('.msg-content').append(msgHtml);
-	//滚动条一直在最底
 	$(".msg-content").scrollTop($(".msg-content")[0].scrollHeight);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Add received message in UI..
 function addMsgFromUser(msgObj, isSelf){
+    // Create message according type..
 	var msgType = isSelf ? "message-reply" : "message-receive";
-	var msgHtml = $('<div><div class="message-info"><div class="user-info"><img src="/images/1.jpg" class="user-avatar img-thumbnail"></div><div class="message-content-box"><div class="arrow"></div><div class="message-content">test</div></div></div></div>');
-	msgHtml.addClass(msgType);
+	var msgHtml = $('<div><div class="message-info"><div class="user-info"><img src="/images/1.jpg" class="user-avatar img-thumbnail"></div><div class="message-content-box"><div class="arrow"></div><div class="message-username">TEST1</div><div class="message-content">test</div><div class="message-time">13:01 22/7/2016</div></div></div></div>');
+
+    // Get current time stamp..
+    var timeStamp = getTimeStamp();
+    var msgContent = msgObj.msg.replace(/\n/g, '<br>');
+
+    // Add values to the elements..
+    msgHtml.addClass(msgType);
 	msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('src',msgObj.from.img);
-	msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('title',msgObj.from.name);
-	msgHtml.children('.message-info').children('.message-content-box').children('.message-content').text(msgObj.msg);
+	msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('title',msgObj.from.username);
+	msgHtml.children('.message-info').children('.message-content-box').children('.message-content').html(msgContent);
+	msgHtml.children('.message-info').children('.message-content-box').children('.message-username').text(msgObj.from.username + " say:");
+	msgHtml.children('.message-info').children('.message-content-box').children('.message-time').text(timeStamp);
 	$('.msg-content').append(msgHtml);
+
 	// Scroll to the bottom..
 	$(".msg-content").scrollTop($(".msg-content")[0].scrollHeight);
 }
@@ -255,7 +290,14 @@ function checkUser(name){
 	return haveName;
 }
 
-function showSetMsgToOne(name, id){
+// Action for selecting new user to chat with..
+function showSetMsgToOne(name, email, id){
+    var parentUl = $('.user-content').children('ul');
+    var userItems = parentUl.children('li:first');
+
+    // alert(userItems);
+
+    // Show send message dialog..
 	$('#myModalLabel1').text("To : " + name);
 	toOneId = id;
     $('#setMsgToOne').modal();
@@ -269,20 +311,28 @@ function addUser(userList){
 
 	for(var i in userList){
 		var cloneLi = cloneSample.clone();
-		cloneLi.children('a').attr('href', "javascript:showSetMsgToOne('" + userList[i].name + "','" + userList[i].id + "');");
-		cloneLi.children('a').children('img').attr('src', userList[i].img);
-		cloneLi.children('a').children('span').text(userList[i].name);
+		cloneLi.children('div').attr('onclick', "javascript:showSetMsgToOne('" + userList[i].name + "','" + userList[i].email + "','" + userList[i].id + "');");
+		cloneLi.children('div').children('img').attr('src', userList[i].img);
+		cloneLi.children('div').children('span').text(userList[i].email);
 		cloneLi.show();
 		parentUl.append(cloneLi);
 	}
 }
 
+// Select user to have a dialog
+function changeUser() {
+
+    alert("change");
+}
+
 //send message enter function
 function keywordsMsg(e){
 	var event1 = e || window.event;
-	if(event1.keyCode == 13){
+	if(event1.keyCode == 10){
 		$('#sendMsg').click();
+        e.preventDefault();
 	}
+    return false;
 }
 
 //set name enter function
@@ -298,4 +348,28 @@ function keywordsName1(e){
 	if(event1.keyCode == 13){
 		$('#btn_toOne').click();
 	}
+}
+
+// Get current time stamp..
+function getTimeStamp() {
+	var date = new Date();
+
+	var hour = date.getHours();
+	hour = (hour < 10 ? "0" : "") + hour;
+
+	var min  = date.getMinutes();
+	min = (min < 10 ? "0" : "") + min;
+
+	var sec  = date.getSeconds();
+	sec = (sec < 10 ? "0" : "") + sec;
+
+	var year = date.getFullYear();
+
+	var month = date.getMonth() + 1;
+	month = (month < 10 ? "0" : "") + month;
+
+	var day  = date.getDate();
+	day = (day < 10 ? "0" : "") + day;
+
+	return hour + ":" + min + ":" + sec + "  " + day + "/" + month + "/" + year;
 }
