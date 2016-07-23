@@ -217,7 +217,7 @@ io.on('connection', function(socket) { //on first connection
                 img : user.img
             }
 
-            console.log("LOGIN USER ------\n", userInfo);
+            console.log("LOGIN USER ------", userInfo);
             // Send the client information to client..
             socket.emit('userInfo', userInfo);
         });

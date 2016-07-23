@@ -150,7 +150,8 @@ $(function(){
 		email : $('#usermail').val(),
 		img : "/images/man.png"
 	}
-	socket.emit("login", userObj);
+	alert('Login');
+	socket.emit('login', userObj);
 	//////////////////////////////////////////////////////////////////////////////////////
 
 
