@@ -55,7 +55,7 @@ db.once('open', function () {
 });
 
 var UserDB = require('./schema/userSchema.js');
-var ConvDB = require('./schema/convSchema.js');
+// var ConvDB = require('./schema/convSchema.js');
 var sUser;
 
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
