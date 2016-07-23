@@ -10,7 +10,7 @@ body{
 ::selection {background:#4593BC;color:#FFFFFF;}
 
 .msg-content{
-	height:500px;
+	height:450px;
 	overflow-x: hidden;
 	padding: 15px;
 }
@@ -23,8 +23,8 @@ body{
 	padding-top: 30px;
 }
 .msg-content ul li img{
-	width: 45px;
-	height: 45px;
+	width: 50px;
+	height: 105px;
 }
 .msg-content ul li .my-msg{
 	float: right;
@@ -53,13 +53,20 @@ body{
 	height: 450px;
 	width: 100%;
 }
+
 .user-content ul{
-	
+
 }
+
 .user-content ul li{
-	display:block;
+	display: block;
 	border-bottom: 1px solid #ccc;
 }
+
+.user-content ul li.selected{
+	background-color: #d9edf7;
+}
+
 .user-content ul li a{
 	display:block;
 	text-decoration:none;

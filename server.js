@@ -55,6 +55,7 @@ db.once('open', function () {
 });
 
 var UserDB = require('./schema/userSchema.js');
+var ConvDB = require('./schema/convSchema.js');
 var sUser;
 
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
@@ -173,7 +174,7 @@ var userList = [];
 
 io.on('connection', function(socket) { //on first connection
 
-    console.log('a user connected');
+    console.log('a user connected!');
 
     var datas=[], firstChoice;
 
@@ -216,7 +217,7 @@ io.on('connection', function(socket) { //on first connection
                 img : user.img
             }
 
-            console.log("USERINFO ------", userInfo);
+            console.log("LOGIN USER ------\n", userInfo);
             // Send the client information to client..
             socket.emit('userInfo', userInfo);
         });
@@ -232,6 +233,7 @@ io.on('connection', function(socket) { //on first connection
         if (userList == null) {
             return;
         }
+
         var user = userList.find(function(item) {
             return item.id === socket.id;
         });
@@ -241,10 +243,10 @@ io.on('connection', function(socket) { //on first connection
             userList.splice(userList.indexOf(user), 1);
 
             //send the userlist to all client
-            io.emit('userList',userList);
+            io.emit('userList', userList);
 
             //send login info to all.
-            socket.broadcast.emit('loginInfo',user.name+" disconnected。");
+            socket.broadcast.emit('sysInfo', user.name + " disconnected.");
         }
     });
 
@@ -266,24 +268,39 @@ io.on('connection', function(socket) { //on first connection
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Send image from one user to all other users..
-    socket.on('imageToALL',function(msgObj){
+    socket.on('imgToOne',function(msgObj){
         /*
          format:{
-            from:{
-                 name:"",
-                 img:"",
-                 id:""
-            },
-            img:""
+             from : {
+                 username : username,
+                 email : email,
+                 password : password,
+                 contacts : contacts
+                 id : socket id
+             }
+             img : e.target.result,
+             to : receiver.id,
          }
         */
-        console.log("image sent!");
-        socket.broadcast.emit('imageToALL', msgObj);
+
+        var receiver = userList.find(function(item) {
+            return item.id === msgObj.to;
+        });
+
+        if(receiver != null) {
+            var toSocket;
+            toSocket = receiver.id;
+            io.sockets.connected[toSocket].emit('imgToOne', msgObj);
+            console.log("Send image!");
+        }
+        else {
+            console.log("Failed sending image!");
+        }
     });
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Send image from one user to another..
-    socket.on('toOne',function(msgObj){
+    socket.on('msgToOne',function(msgObj){
         /*
          msgObj format:{
              from:{
@@ -299,12 +316,16 @@ io.on('connection', function(socket) { //on first connection
          }
         */
 
+        // Find person to send message..
         var receiver = userList.find(function(item) {
             return item.id === msgObj.to;
         });
-        var toSocket = receiver.id;
-        console.log(toSocket);
-        io.sockets.connected[toSocket].emit('toOne', msgObj);
+
+        if(receiver != null) {
+            var toSocket;
+            toSocket = receiver.id;
+            io.sockets.connected[toSocket].emit('msgToOne', msgObj);
+        }
     });
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////

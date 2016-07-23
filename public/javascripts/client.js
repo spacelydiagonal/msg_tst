@@ -1,4 +1,13 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Variables..
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Own information..
 var userSelf = {};
+// User information that is discussing to this user..
+var userConv = {};
+// Converting user socket ID..
 var toOneId;
 
 //connection to host and port
@@ -60,40 +69,44 @@ socket.on('toAll',function(msgObj){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Receive message from users, determine it from whom..
-socket.on('toOne',function(msgObj){
+socket.on('msgToOne',function(msgObj){
     /*
-     msgObj format:{
-         from:{
-             id : user.id,
-             username : gotuser.local.username,
-             email : gotuser.local.email,
-             password : gotuser.local.password,
-             contacts : gotuser.local.contacts,
-             img : user.img
-         },
-         to:"",  //  socket id
-         msg:""
-     }
-     */
+    msgObj format:{
+        from:{
+            id : user.id,
+            username : gotuser.local.username,
+            email : gotuser.local.email,
+            password : gotuser.local.password,
+            contacts : gotuser.local.contacts,
+            img : user.img
+        },
+        to:"",  //  socket id
+        msg:""
+    }
+    */
+    addMsgFromUser(msgObj, false);
 
-	Messenger().post({
-		message: "<a href=\"javascript:showSetMsgToOne(\'" + msgObj.from.username + "\',\'" + msgObj.from.id + "\');\">Message from " + msgObj.from.username + " : "+ msgObj.msg+"</a>",
-		showCloseButton: true
-	});
+	// Messenger().post({
+	// 	message: "<a href=\"javascript:showSetMsgToOne(\'" + msgObj.from.username + "\',\'" + msgObj.from.id + "\');\">Message from " + msgObj.from.username + " : "+ msgObj.msg+"</a>",
+	// 	showCloseButton: true
+	// });
 });
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Receive image and add..
-socket.on('imageToALL', function(msgObj){
+socket.on('imgToOne', function(msgObj){
 	/*
 	 format:{
-		 from:{
-			 name:"",
-			 img:"",
-			 id:""
-		 },
-		 img:""
+         from : {
+             username : username,
+             email : email,
+             password : password,
+             contacts : contacts
+             id : socket id
+         }
+         img : e.target.result,
+         to : receiver.id,
 	 }
 	 */
 	addImgFromUser(msgObj, false);
@@ -153,12 +166,16 @@ $(function(){
       		return;
     	}
 
-    	var sender = userSelf;
-    	var msgObj = {
-      		from : sender,
-      		msg : msg
-    	};
-    	socket.emit('toAll', msgObj);
+    	// Create data to send..
+        var msgObj = {
+            from : userSelf,
+            to : userConv.id,
+            msg : msg
+        };
+        // Send data..
+        sendMessage(msg, msgObj);
+
+        // Show sent message to display..
     	addMsgFromUser(msgObj, true);
 		$('#msg').val('');
 		$('#msg').html('');
@@ -195,6 +212,7 @@ $(function(){
 	// Send image to all other users..
     $('#sendImage').change(function(){
         if(this.files.length != 0){
+            // Read file..
             var file = this.files[0];
             reader = new FileReader();
             if(!reader){
@@ -202,12 +220,14 @@ $(function(){
                 return;
             }
             reader.onload = function(e){
-                //console.log(e.target.result);
                 var msgObj = {
-                    from:userSelf,
-                    img:e.target.result
+                    from : userSelf,
+                    img : e.target.result,
+                    to : userConv.id
                 };
-                socket.emit('imageToALL', msgObj);
+                // Send file to the user..
+                sendImage(msgObj);
+                // Add to the dialog list..
                 addImgFromUser(msgObj,true);
             };
             reader.readAsDataURL(file);
@@ -234,7 +254,56 @@ $(function(){
     })
 });
 
-//add message in UI
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Actions for add messages to the UI..
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Add a user in user list UI..
+function addUser(userList){
+    var parentUl = $('.user-content').children('ul');
+    var cloneSample = parentUl.children('li:first').clone();
+    parentUl.html('');
+
+    // alert(cloneSample);
+
+    for(var i in userList){
+        var cloneLi = cloneSample.clone();
+        cloneLi.attr('id', userList[i].email);
+        cloneLi.children('div').attr('onclick', "javascript:selectUser('" + userList[i].name + "','" + userList[i].email + "','" + userList[i].id + "');");
+        cloneLi.children('div').children('img').attr('src', userList[i].img);
+        cloneLi.children('div').children('span').text(userList[i].email);
+        cloneLi.show();
+        parentUl.append(cloneLi);
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Add sent/received message in UI..
+function addMsgFromUser(msgObj, isSelf){
+    // Create message according type..
+    var msgType = isSelf ? "message-reply" : "message-receive";
+    var msgHtml = $('<div><div class="message-info"><div class="user-info"><img src="/images/1.jpg" class="user-avatar img-thumbnail"></div><div class="message-content-box"><div class="arrow"></div><div class="message-username">TEST1</div><div class="message-content">test</div><div class="message-time">13:01 22/7/2016</div></div></div></div>');
+
+    // Get current time stamp..
+    var timeStamp = getTimeStamp();
+    var msgContent = msgObj.msg.replace(/\n/g, '<br>');
+
+    // Add values to the elements..
+    msgHtml.addClass(msgType);
+    msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('src',msgObj.from.img);
+    msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('title',msgObj.from.username);
+    msgHtml.children('.message-info').children('.message-content-box').children('.message-content').html(msgContent);
+    msgHtml.children('.message-info').children('.message-content-box').children('.message-username').text(msgObj.from.username + " say:");
+    msgHtml.children('.message-info').children('.message-content-box').children('.message-time').text(timeStamp);
+    $('.msg-content').append(msgHtml);
+
+    // Scroll to the bottom..
+    $(".msg-content").scrollTop($(".msg-content")[0].scrollHeight);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Add sent/received image to UI..
 function addImgFromUser(msgObj, isSelf){
 	var msgType = isSelf?"message-reply":"message-receive";
 	// var msgHtml = $('<div><div class="message-info"><div class="user-info"><img src="/images/1.jpg" class="user-avatar img-thumbnail"></div><div class="message-content-box"><div class="arrow"></div><div class="message-content">test</div></div></div></div>');
@@ -251,81 +320,74 @@ function addImgFromUser(msgObj, isSelf){
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Add received message in UI..
-function addMsgFromUser(msgObj, isSelf){
-    // Create message according type..
-	var msgType = isSelf ? "message-reply" : "message-receive";
-	var msgHtml = $('<div><div class="message-info"><div class="user-info"><img src="/images/1.jpg" class="user-avatar img-thumbnail"></div><div class="message-content-box"><div class="arrow"></div><div class="message-username">TEST1</div><div class="message-content">test</div><div class="message-time">13:01 22/7/2016</div></div></div></div>');
-
-    // Get current time stamp..
-    var timeStamp = getTimeStamp();
-    var msgContent = msgObj.msg.replace(/\n/g, '<br>');
-
-    // Add values to the elements..
-    msgHtml.addClass(msgType);
-	msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('src',msgObj.from.img);
-	msgHtml.children('.message-info').children('.user-info').children('.user-avatar').attr('title',msgObj.from.username);
-	msgHtml.children('.message-info').children('.message-content-box').children('.message-content').html(msgContent);
-	msgHtml.children('.message-info').children('.message-content-box').children('.message-username').text(msgObj.from.username + " say:");
-	msgHtml.children('.message-info').children('.message-content-box').children('.message-time').text(timeStamp);
-	$('.msg-content').append(msgHtml);
-
-	// Scroll to the bottom..
-	$(".msg-content").scrollTop($(".msg-content")[0].scrollHeight);
-}
-
-//add msg from system in UI
+// Add message from system in UI
 function addMsgFromSys(msg){
 	$.scojs_message(msg, $.scojs_message.TYPE_OK);
 }
 
-//check is the username exist.
-function checkUser(name){
-	var haveName = false;
-	$(".user-content").children('ul').children('li').each(function(){
-		if(name == $(this).find('span').text()){
-			haveName = true;
-		}
-	});
-	return haveName;
-}
-
-// Action for selecting new user to chat with..
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Show message box to one..
 function showSetMsgToOne(name, email, id){
     var parentUl = $('.user-content').children('ul');
-    var userItems = parentUl.children('li:first');
+    var items = parentUl.children('li');
+    var item = items.get(0);
 
-    // alert(userItems);
+    for(var i = 0; i < items.length; i++) {
+        item = items.get(i);
+        if(item.id == email) {
+            // alert(item);
+            item.setAttribute("style", "background-color: #d9edf7;");
+        }
+        else {
+            item.setAttribute("style", "");
+        }
+    }
+
+    var newUser = {
+        username : name,
+        email : email,
+        id : id
+    }
+    userConv = newUser;
 
     // Show send message dialog..
-	$('#myModalLabel1').text("To : " + name);
-	toOneId = id;
-    $('#setMsgToOne').modal();
+    // $('#myModalLabel1').text("To : " + name);
+    // toOneId = id;
+    // $('#setMsgToOne').modal();
 }
 
-// Add a user in user list UI..
-function addUser(userList){
-	var parentUl = $('.user-content').children('ul');
-	var cloneSample = parentUl.children('li:first').clone();
-	parentUl.html('');
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Actions for selecting and sending message to user..
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Action for selecting new user to chat with..
+function selectUser(name, email, id){
+    var parentUl = $('.user-content').children('ul');
+    var items = parentUl.children('li');
+    var item = items.get(0);
 
-	for(var i in userList){
-		var cloneLi = cloneSample.clone();
-		cloneLi.children('div').attr('onclick', "javascript:showSetMsgToOne('" + userList[i].name + "','" + userList[i].email + "','" + userList[i].id + "');");
-		cloneLi.children('div').children('img').attr('src', userList[i].img);
-		cloneLi.children('div').children('span').text(userList[i].email);
-		cloneLi.show();
-		parentUl.append(cloneLi);
-	}
+    // Set user to select..
+    for(var i = 0; i < items.length; i++) {
+        item = items.get(i);
+        if(item.id == email) {
+            item.setAttribute("style", "background-color: #d9edf7;");
+        }
+        else {
+            item.setAttribute("style", "");
+        }
+    }
+
+    var newUser = {
+        username : name,
+        email : email,
+        id : id
+    }
+
+    userConv = newUser;
+    // toOneId = id;
 }
 
-// Select user to have a dialog
-function changeUser() {
-
-    alert("change");
-}
-
-//send message enter function
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Send message enter function..
 function keywordsMsg(e){
 	var event1 = e || window.event;
 	if(event1.keyCode == 10){
@@ -335,6 +397,59 @@ function keywordsMsg(e){
     return false;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Send message to all persons..
+function sendMsgToAll(sender, receiver) {
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Send message to all persons in group..
+function sendMsgToAll() {
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Send image to one person..
+function sendImage(msgObj) {
+    /*
+    var msgObj = {
+        from : {
+            username : username,
+            email : email,
+            password : password,
+            contacts : contacts
+            id : socket id
+        }
+        img : e.target.result,
+        to : sender.id,
+    };
+     */
+
+    socket.emit('imgToOne', msgObj);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Send message to one person..
+function sendMessage(msg, msgObj) {
+    /*
+     var msgObj = {
+         from : {
+             username : username,
+             email : email,
+             password : password,
+             contacts : contacts
+             id : socket id
+         }
+         to : sender.id,
+         msg : msg
+     };
+     */
+
+    socket.emit('msgToOne', msgObj);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Actions for others(key event, ..)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //set name enter function
 function keywordsName(e){
 	var event1 = e || window.event;
@@ -342,6 +457,8 @@ function keywordsName(e){
 		$('#btn-setName').click();
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //send to one enter function
 function keywordsName1(e){
 	var event1 = e || window.event;
@@ -350,6 +467,7 @@ function keywordsName1(e){
 	}
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Get current time stamp..
 function getTimeStamp() {
 	var date = new Date();

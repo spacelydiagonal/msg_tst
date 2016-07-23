@@ -19,13 +19,17 @@ html
                 .col-sm-3
                     .panel.panel-primary(style="margin-right:-10px;")
                         .panel-heading
-                            span.glyphicon.glyphicon-user &nbsp;
-                            span Linked Guy
+                            div
+                                span.glyphicon.glyphicon-user &nbsp;
+                                span Contracts
+                            div
+                                span.glyphicon.glyphicon-user &nbsp;
+                                span Contracts
                         .panel-body
                             .msg-list-body.user-content
                                 ul
-                                    li(style="display:none;")
-                                        div(href="#", type="checkbox" onclick="javascript:changeUser();")
+                                    li(id="li", style="display:none;")
+                                        div(href="#", onclick="javascript:changeUser();")
                                             img.img-thumbnail(src="/images/man.png")
                                             span
 
@@ -109,7 +113,6 @@ html
                             input.btn.btn-primary#btn_toOne(type="button",value="Send")
 
         script(src="/socket.io/socket.io.js")
-        script(src='/javascripts/chat.js')
         script(src='/javascripts/client.js')
         script(src='/javascripts/sco.message.js')
         script(src="/js/messenger.min.js")
