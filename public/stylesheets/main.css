@@ -2,18 +2,53 @@ li{
 	list-style-type: none;
 }
 body{
-	background:url(/images/bg.png) no-repeat center center fixed;
+	overflow: hidden;
+	height: 100%;
+	background:url("/images/bg.png") no-repeat center center fixed;
 	background-size: cover;
 }
 
 ::-moz-selection{background:#4593BC;color:#FFFFFF;}
 ::selection {background:#4593BC;color:#FFFFFF;}
 
+.container {
+	width: 100%;
+    height: 100%;
+    margin-top: -3px;
+}
+
+.row{
+	margin-top: 1px;
+}
+
+.row-space {
+	height: 150px;
+}
+.space {
+	width: 3px;
+}
+
+.col-sm-3 {
+	padding: 0px;
+	padding-right: 5px;
+}
+
+.col-sm-9 {
+	padding: 0px;
+	padding-left: 5px;
+}
+
 .msg-content{
-	height:450px;
+	/*height:595px;*/
 	overflow-x: hidden;
 	padding: 15px;
 }
+
+.msg-content .img {
+    max-width: 200px;
+    max-height: 200px;
+}
+
 .msg-content ul{
 	
 }
@@ -31,27 +66,225 @@ body{
 	margin-right: 10px;
 }
 
-.row{
-	margin-top: 80px;
+.contacted-offline{
+	background: #ffffff;
+	border: 1px solid #127fff;
 }
+
+.contacted-online{
+	background: #127fff;
+	border: 1px solid #ffffff;
+}
+
+.added-offline{
+	background: #ffffff;
+	border: 1px solid #b5d592;
+}
+
+.added-online{
+	background: #b5d592;
+	border: 1px solid #ffffff;
+}
+
+.invited-offline{
+	background: #ffffff;
+	border: 1px solid #C09853;
+}
+
+.invited-online{
+	background: #C09853;
+	border: 1px solid #ffffff;
+}
+
+.declined-offline{
+    background: #ffffff;
+    border: 1px solid #c02d11;
+}
+
+.declined-online{
+    background: #c02d11;
+    border: 1px solid #ffffff;
+}
+
+.away-offline{
+	background: rgba(0, 0, 0, 0);
+	border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.away-online{
+	background: rgba(0, 0, 0, 0);
+	border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.panel-primary{
+	border-color: #c7c7c7;
+}
+
+.head-title {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.dropdown-icon {
+    margin-left: -10px;
+    color: #42c0fb;
+}
+
+.dropdown-text {
+    color: #2e2e2e;
+    padding-left: 10px;
+}
+
+.search {
+    height: 26px;
+    width: 100%;
+    padding: 0 12px 0 25px;
+    background: white url("/images/search.png") no-repeat;
+    border: 1px solid;
+    border-color: #a8acbc #babdcc #c0c3d2;
+    border-radius: 13px;
+}
+
+.search input:focus {
+    outline: 0;
+    border-color: #66b1ee;
+    -webkit-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+    box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+}
+
+
+.panel-primary>.panel-heading {
+	color: #393a40;
+	background-color: #ffffff;
+    border-color: #e8e6e6;
+    min-height: 55px;
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.panel-footer {
+    padding: 10px 15px;
+    background-color: #ffffff;
+    border-left: 1px solid #c7c7c7;
+    border-top: 1px solid #eee;
+    border-right: 1px solid #eee;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
+.panel-body{
+    height: 610px;
+    width: 100%;
+}
+
+.panel-msgbody{
+    height: 595px;
+    width: 70%;
+    border-right: 1px solid #e8e8e8;
+}
+
+.panel-msgboxbody {
+    height: 595px;
+    width: 100%;
+}
+
+.panel-infobody{
+    height: 595px;
+    width: 30%;
+    /*border-left: 1px solid #e8e8e8;*/
+}
+
+.self-panel {
+    border-top: 1px solid #eee;
+}
+
+.progress-panel {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.action-button {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #33a0c5;
+    border-radius: 10px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+}
+
+.user-info {
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.info-avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    position: absolute;
+}
+
+.avatar .status {
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    position: absolute;
+}
+
 .user-content{
-	height:500px;
+	height:610px;
 	margin-top: -15px;
 	margin-left: -55px;
 	margin-right: -14px;
 	overflow-x: hidden;
 }
-.panel-body{
-	height: 500px;
-	width: 100%;
+
+.user-content .user {
+	position: relative;
+	padding: 0 0 0 5px;
+	display: block;
+	cursor: pointer;
+	margin: 0 0 10px;
 }
-.panel-userbody{
-	height: 500px;
-	width: 100%;
+
+.user-content .user .avatar {
+	top: 0;
+	left: 0;
+    margin-left: -65px;
 }
-.panel-msgbody{
-	height: 450px;
-	width: 100%;
+
+.user-content .user .status {
+	bottom: -10px;
+	left: 45px;
+}
+
+.user-content .user .name {
+	color: #2e2e2e;
+	padding-top: 10px;
+	font-size: 14px;
+    font-family: Corbel;
+	line-height: 20px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.user-content .user .mood {
+	font: 200 12px/20px "Raleway", sans-serif;
+	color: #aaaa99;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .user-content ul{
@@ -59,8 +292,10 @@ body{
 }
 
 .user-content ul li{
-	display: block;
-	border-bottom: 1px solid #ccc;
+    margin-left: 75px;
+    margin-right: 2px;
+    display: block;
+	border-bottom: 1px solid #eee;
 }
 
 .user-content ul li.selected{
@@ -76,11 +311,92 @@ body{
 	background-color: #8794a7;
 }
 .user-content ul li img{
+	border-radius: 50px;
 	width: 45px;
 	height: 45px;
-	margin: 5px 5px 5px 20px;
+	margin: 5px 5px 5px 10px;
 }
 .user-content ul li a span{
 	color: #343434;
 	font-size: 13px;
+}
+
+
+.grp-content{
+    height:400px;
+    margin: -15px;
+    overflow-x: hidden;
+    background-color: #ffffff;
+}
+
+.grp-content .user {
+    position: relative;
+    padding: 0 0 0 5px;
+    display: block;
+    cursor: pointer;
+    margin: 0 0 10px;
+}
+
+.grp-content .user .avatar {
+    top: 0;
+    left: 0;
+}
+
+.grp-content .user .status {
+    bottom: -10px;
+    left: 45px;
+}
+
+.grp-content .user .name {
+    color: #55548e;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 60px;
+}
+
+.grp-content .user .mood {
+    font: 200 12px/20px "Raleway", sans-serif;
+    color: #7694c1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.grp-content ul{
+    margin-left: -30px;
+}
+
+.grp-content ul li{
+    margin-left: -10px;
+    display: block;
+    border-bottom: 1px solid #eee;
+}
+
+.grp-content ul li.selected{
+    background-color: #d9edf7;
+}
+
+.grp-content ul li a{
+    display:block;
+    text-decoration:none;
+}
+.grp-content ul li a:hover{
+    display:block;
+    background-color: #8794a7;
+}
+.grp-content ul li img{
+    border-radius: 50px;
+    width: 45px;
+    height: 45px;
+    margin: 5px 5px 5px 10px;
+}
+.grp-content ul li a span{
+    color: #343434;
+    font-size: 13px;
 }

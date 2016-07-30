@@ -2,7 +2,7 @@ doctype html
 html
     head
         title= title
-        meta(name="viewport",content="width=device-width, initial-scale=1")
+        meta(name="viewport",content="width=device-width, height=device-height, initial-scale=1")
         link(rel='stylesheet', href='http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/main.css')
         script(src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js")
@@ -13,65 +13,182 @@ html
         link(rel='stylesheet', href='/stylesheets/message.css')
         link(rel='stylesheet', href='/css/messenger.css')
         link(rel='stylesheet', href='/css/messenger-theme-flat.css')
+        script(async="", src="http://engine.carbonads.com/z/57843/azcarbon_2_1_0_VERT")
 
         .container
             .row
                 .col-sm-3
-                    .panel.panel-primary(style="margin-right:-10px;")
+                    .panel.panel-primary(style="margin-right:-10px; padding-top: 1px; border: 0px;")
                         .panel-heading
-                            div
-                                span.glyphicon.glyphicon-user &nbsp;
-                                span Contracts
-                            div
-                                span.glyphicon.glyphicon-user &nbsp;
-                                span Contracts
+                            div(style="padding-top: 8px; margin-left: -10px; margin-right: -10px;")
+                                .dropdown.pull-left#menu-add(onclick="javascript:addNewGroup();", style="padding-left: 10px", title="Add new group")
+                                    a(href="#", data-toggle="dropdown").dropdown-toggle
+                                        img(src="/images/plus.png", style="width: 20px; height: 20px;")
+                                span.head-title(style="cursor:default; margin-left: 20%;") Messenger
+                                .dropdown.pull-right#menu-settings(style="padding-right: 10px", title="Settings")
+                                    a(href="#", data-toggle="dropdown").dropdown-toggle
+                                        img(src="/images/settings.png", style="width: 20px; height: 20px;")
+                                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu')
+                                        li
+                                            a(onclick="javascript:refreshContactList(contactList);", tabindex='-1', style="cursor: default; display: list-item;")
+                                                span.glyphicon.glyphicon-user.dropdown-icon
+                                                span.dropdown-text My Contact
+                                        li
+                                            a(onclick="javascript:inviteUser();", tabindex='-1', style="cursor: default; display: list-item;")
+                                                span.glyphicon.glyphicon-envelope.dropdown-icon
+                                                span.dropdown-text Invite person
+                                        li.divider
+                                        li
+                                            a(onclick="javascript:showSearchBar();", tabindex='-1', style="cursor: default; display: list-item;")
+                                                span.glyphicon.glyphicon-search.dropdown-icon
+                                                span.dropdown-text Search person
+
+                                .input-group#grp-searchPerson(style="padding-top: 10px; width: 100%;")
+                                    input.form-control.search#input-searchPerson(type="search", placeholder="Search people", title="People name & email", style="border-radius: 13px;" onkeydown="javascript:keyEventSearchPerson(event);")
+                                    button.btn.btn-secondary#btn-searchPerson(title="Search person" style="display:none;")
+                                        span.glyphicon.glyphicon-search
+
+
+
+
+                        .input-group(style="padding: 5px; width: 100%; display: none;")
+                            input.form-control.search#input-searchContact(type="search", placeholder="Search contact", title="Contact name & email", style="border-radius: 13px;" onkeydown="javascript:keyEventSearchContact(event);")
+                            button.btn.btn-secondary#btn-searchContact(title="Search contact" style="display:none;")
+                                span.glyphicon.glyphicon-search
+
                         .panel-body
                             .msg-list-body.user-content
                                 ul
                                     li(id="li", style="display:none;")
-                                        div(href="#", onclick="javascript:changeUser();")
-                                            img.img-thumbnail(src="/images/man.png")
-                                            span
+                                        .user
+                                            .avatar
+                                                img(src="/images/man.png")
+                                                .status.offline
+                                            .name Name
+                                            .mood Mood for this
+
+                                    //li(id="li", style="display:none;")
+                                    //    div(href="#", onclick="javascript:changeUser();")
+                                    //        img.img-thumbnail(src="/images/man.png")
+                                    //        span
 
                         .panel-footer
-                            .btn-group
-                                button.btn.btn-primary(type="button")
-                                    span.glyphicon.glyphicon-home
-                                //button.btn.btn-primary(type="button")
-                                //    span.glyphicon.glyphicon-user
-                                //button.btn.btn-primary(type="button")
-                                //    span.glyphicon.glyphicon-film
-                                //button.btn.btn-primary(type="button")
-                                //    span.glyphicon.glyphicon-music
-                                //button.btn.btn-primary(type="button")
-                                //    span.glyphicon.glyphicon-heart
-                                button.btn.btn-primary#sendInvite(type="button")
-                                    span.glyphicon.glyphicon-envelope
+                            .row(style="margin-top: 0px; padding-left: 15px; padding-right: 15px;")
+                                .btn-group.pull-left
+                                    button.btn.btn-secondary#btn-myContactList(title="Your contact")
+                                        span.glyphicon.glyphicon-user
+                                    //button.btn.btn-secondary(type="button")
+                                    //    span.glyphicon.glyphicon-user
+                                    //button.btn.btn-secondary(type="button")
+                                    //    span.glyphicon.glyphicon-film
+                                    //button.btn.btn-secondary(type="button")
+                                    //    span.glyphicon.glyphicon-music
+                                    button.btn.btn-secondary#sendInvite(title="Send invite")
+                                        span.glyphicon.glyphicon-envelope
+                                    button.btn.btn-secondary#btn-addGrpConv(title="Add chatting group")
+                                        span.glyphicon.glyphicon-plus
+                                .btn-group.pull-right
+                                    button.btn.btn-info#btn-removeFromContact(disabled, title="Remove from your contact")
+                                        span.glyphicon.glyphicon-minus-sign
+                                    button.btn.btn-info#btn-addToContact(disabled, title="Add to your contact")
+                                        span.glyphicon.glyphicon-plus-sign
+
                 .col-sm-9
                     .panel.panel-primary
-                        .panel-heading
-                            span.glyphicon.glyphicon-comment &nbsp;
-                            span Chat_Room
-                            label(style="float:right;") Hello,#{userInfo.username}!
-                            span#spanuser(style="float:right;")
-                        .panel-msgbody
-                            .msg-list-body.msg-content
+                        .panel-heading(style="padding: 0px;")
+                            div
+                                .div
+                                    div(style="text-align: center; font-weight: bold; padding-top: 15px;")
+                                        span#span-mainTitle Test1
+                                    div(style="text-align: center; margin-top: -4px;")
+                                        span#span-subTitle(style="font-size: 12px;") Messenger
+                                .dropdown.pull-right(style="margin-top: -30px; padding-right: 20px; display: none;", title="Add to your contact")
+                                    a(href="#", data-toggle="dropdown").dropdown-toggle
+                                        img(src="/images/plus.png", style="width: 20px; height: 20px;" )
+                        .panel-msgboxbody
+                            .panel-msgbody.pull-left
+                                .msg-list-body.msg-content#messages
 
-                        .panel-footer
-                            input.form-controll#regname(type="hidden", value="#{userInfo.username}")
-                            input.form-controll#usermail(type="hidden", value="#{userInfo.email}")
-                            textarea.form-control#msg(type="text", style="display:inline;", placeholder="Type message to send", onkeypress="javascript:keywordsMsg(event);")
-                            .input-group
-                                .col-sm-12
-                                .input-group-addon
-                                    a(href="#")
-                                    img(src="/images/bq.png")
-                                .input-group-addon(style="padding-bottom:0px;")
-                                    label(style="position:relative;")
-                                        img(src="/images/jt.jpg",title="send images",style="cursor:pointer;")
-                                        input#sendImage(type="file",value="images",style="display:none;")
-                                span.input-group-btn
-                                    button.btn.btn-primary#sendMsg(type="button") Send
+                                .panel-footer
+                                    input.form-controll#regname(type="hidden", value="#{userInfo.username}")
+                                    input.form-controll#usermail(type="hidden", value="#{userInfo.email}")
+                                    textarea.form-control#msg(type="text", style="display:inline;", placeholder="Type message to send", onkeypress="javascript:keyEventMessage(event);")
+                                    .input-group
+                                        .progress-panel#progress-panel(style="visibility: hidden")
+                                            .progress-info
+                                                span#upload-progresstext Now uploading.. 100%
+                                            .progress#upload-progress(style="height: 10px; margin: 0px; height: 10px;")
+                                                .progress-bar(role="progressbar")
+                                        .input-group-addon(style="padding-bottom:0px;")
+                                            label(style="position:relative;")
+                                                span.glyphicon.glyphicon-paperclip(style="cursor:pointer;")
+                                                input#sendFile(type="file", title="Send files",value="files",style="display:none;")
+                                        .input-group-addon(style="padding-bottom:0px;")
+                                            label(style="position:relative;")
+                                                span.glyphicon.glyphicon-picture(style="cursor:pointer;")
+                                                input#sendImage(type="file", title="Send image",value="images",style="display:none;")
+                                        span.input-group-btn
+                                            button.btn.btn-secondary#sendMsg(type="button",title="Send message") Send
+
+                            .panel-infobody.pull-right
+                                .div#panel-userinfodiv(style="height: 80%")
+                                    .div#panel-userinfo
+                                        .dropdown.pull-right#action-panel1(onclick="javascript:action_addToContact();", style="padding: 20px; padding-left: 10px;", title="Add to your contact")
+                                            a(href="#", data-toggle="dropdown").dropdown-toggle
+                                                img.action-button#user-actionbutton1(src="/images/plus.png")
+                                        .dropdown.pull-right#action-panel2(onclick="javascript:action_removeFromContact();", style="padding: 20px; padding-right: 0px;", title="Remove from your contact")
+                                            a(href="#", data-toggle="dropdown").dropdown-toggle
+                                                img.action-button#user-actionbutton2(src="/images/minus.png")
+
+
+                                        .div.user-info
+                                            .div#div-userInfo
+                                                .div(style="padding-top : 20px; padding-left: 20px;")
+                                                    .user
+                                                        .avatar
+                                                            img.info-avatar#userinfo-img(src="/images/man.png")
+                                                            .status.contacted-offline#userinfo-status(style="margin-left: 30px; margin-top: 30px;")
+                                                        .name#userinfo-name(style="padding-left: 60px; padding-top: 12px") Name
+                                            .div(style="padding-top: 10px; padding-left: 20px; word-wrap: break-word; padding-bottom: 5px;")
+                                                .mood#userinfo-mood Mood for thisasdfsdfsadlsaksafdjsadlsafksafjsaflksadfjsalksdfsadjsadlsadkjsadlkjf
+                                        .div#other-infopanel(style="min-height: 75%")
+                                            .div#other-info
+                                                ul
+                                                    li(style="display: list-item; min-height: 50px; margin-left: -30px; padding-top: 5px; border-bottom: 1px solid #e8e8e8;")
+                                                        .user
+                                                            .avatar
+                                                                img.info-avatar(src="/images/man.png")
+                                                                .status.offline(style="margin-left: 30px; margin-top: 30px;")
+                                                            .name(style="padding-left: 50px; padding-top: 10px;") Name
+
+                                .self-panel#self-info
+                                    .div(style="text-align: center; font-weight: bold; padding-top: 2px;") Login user Information
+                                    .div(style="padding-top : 3px; padding-left: 10px;")
+                                        .user
+                                            .avatar
+                                                img.info-avatar#selfinfo-img(src="/images/man.png")
+                                                .status.away-offline#selfinfo-status(style="margin-left: 30px; margin-top: 30px;")
+                                            .name#selfinfo-name(style="padding-left: 60px; padding-top: 12px") Name
+                                    .div(style="padding-top: 10px; padding-left: 20px; word-wrap: break-word; padding-bottom: 5px;")
+                                        .mood#selfinfo-mood Mood for thisasdfsdfsadlsaksafdjsadlsafksafjsaflksadfjsalksdfsadjsadlsadkjsadlkjf
+
+
+                        //.panel-footer
+                        //    input.form-controll#regname(type="hidden", value="#{userInfo.username}")
+                        //    input.form-controll#usermail(type="hidden", value="#{userInfo.email}")
+                        //    textarea.form-control#msg(type="text", style="display:inline;", placeholder="Type message to send", onkeypress="javascript:keyEventMessage(event);")
+                        //    .input-group
+                        //        .col-sm-12
+                        //        .input-group-addon
+                        //            a(href="#")
+                        //            img(src="/images/bq.png")
+                        //        .input-group-addon(style="padding-bottom:0px;")
+                        //            label(style="position:relative;")
+                        //                img(src="/images/jt.jpg",style="cursor:pointer;")
+                        //                input#sendImage(type="file", title="Send image",value="images",style="display:none;")
+                        //        span.input-group-btn
+                        //            button.btn.btn-secondary#sendMsg(type="button",title="Send message") Send
+
 
         .modal.fade#myModal(tabindex="-1")
             .modal-dialog
@@ -82,9 +199,9 @@ html
                         .form-group
                             .input-group
                                 .input-group-addon ID
-                                input.form-control#username(type="text",value="User",onkeydown="javascript:keywordsName(event);")
+                                input.form-control#username(type="text",value="User",onkeydown="javascript:keyEventName(event);")
                     .modal-footer
-                        input.btn.btn-primary#btn-setName(type="button",value="Accept")
+                        input.btn.btn-secondary#btn-setName(type="button",value="Accept")
 
         .modal.fade#inviteModel(tabindex="-1")
                 .modal-dialog
@@ -95,26 +212,35 @@ html
                             .form-group
                                 .input-group
                                     .input-group-addon Email
-                                    input.form-control#inviteEmail(type="email", placeholder="Mail to invite here", onkeydown="javascript:keywordsName(event);")
+                                    input.form-control#input-inviteEmail(type="email", placeholder="Mail to invite here", onkeydown="javascript:keyEventInvite(event);")
                         .modal-footer
                             //input.form-controll#userEmail(type="text", value="#{userInfo.username}")
-                            input.btn.btn-primary#btnInvite(type="button", value="Invite")
+                            input.btn.btn-secondary#btn-inviteUser(type="button", value="Invite")
                             label#inviteStatus(style="float:left;")
 
-    .modal.fade#setMsgToOne(tabindex="-1")
-                .modal-dialog
-                    .modal-content
-                        .modal-header
-                            h4.modal-title#myModalLabel1
-                        .modal-body
-                            input.form-control#input_msgToOne(type="text",onkeydown="javascript:keywordsName1(event);")
+        .modal.fade#addGroupModel(tabindex="-1")
+                    .modal-dialog
+                        .modal-content(style="background-color: #f8f8f8;")
+                            .modal-header
+                                h4.modal-title#myModalLabel1 Add Chat Group
+                                .input-group
+                                    .input-group-addon Group Name
+                                    input.form-control#input-grpName(type="text", placeholder="Group name here")
+                            .modal-body
+                                .msg-list-body.grp-content
+                                    ul
+                                        li(id="liID", style="display: none;")
+                                            .user
+                                                .avatar
+                                                    img(src="/images/man.png")
+                                                    .status.offline
+                                                .name Name
+                            .modal-footer
+                                input.btn.btn-secondary#btn-AddGrp(type="button", value="Add")
+                                input.btn.btn-secondary#btn-CancelGrp(type="button", value="Cancel")
 
-                        .modal-footer
-                            input.btn.btn-primary#btn_toOne(type="button",value="Send")
-
-        script(src="/socket.io/socket.io.js")
-        script(src="/javascripts/chat.js")
-        script(src='/javascripts/client.js')
-        script(src='/javascripts/sco.message.js')
-        script(src="/js/messenger.min.js")
-        script(src="/js/messenger-theme-flat.js")
+    script(src="/socket.io/socket.io.js")
+    script(src="/js/messenger.min.js")
+    script(src="/js/messenger-theme-flat.js")
+    script(src="/javascripts/client.js")
+    script(src='/javascripts/sco.message.js')

@@ -6,7 +6,9 @@ var userSchema = mongoose.Schema({
         username: String,
         email: String,
         password: String,
-        contacts: []
+        contacts: [],
+        grp_contacts: [],
+        img: String
     }
 });
 
