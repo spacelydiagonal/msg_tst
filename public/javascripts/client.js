@@ -554,23 +554,23 @@ $(function(){
             };
 
         }
-    	if(selectFlag == "BOT") {
-            // // Create data to send..
-            // var msgObj = {
-            //     type : "BOT",
-            //     from : userSelf.email,
-            //     to : "BOT",
-            //     msg : msg.val()
-            // };
+    	else if(selectFlag == "BOT") {
+            // Create data to send..
+            var msgObj = {
+                type : "BOT",
+                from : userSelf.email,
+                to : "BOT",
+                msg : msg.val()
+            };
             //
             // // Send data..
             // sendMessage(msgObj);
             processMsgForBOT(msg.val());
-            msg.val('');
-            msg.html('');
-            return;
+            // msg.val('');
+            // msg.html('');
+            // return;
         }
-    	if(selectFlag == "ONE") {
+    	else if(selectFlag == "ONE") {
             // Create data to send..
             msgObj = {
                 type : "ONE",
@@ -608,6 +608,7 @@ $(function(){
     //////////////////////////////////////////////////////////////////////////////////////
 	// Send image to all other users..
     $('#sendImage').change(function(){
+        outConsole("CHANGE");
         if(this.files.length != 0){
             // Read file..
             var file = this.files[0];
@@ -617,7 +618,39 @@ $(function(){
                 return;
             }
             reader.onload = function(e){
-                if(selectFlag == "ONE") {
+                outConsole("Reload image", "Loaded!");
+                if(selectFlag == "CON") {
+                    if(!noticeFlag) {
+                        noticeFlag = true;
+                        var dataObj = {
+                            from: {
+                                email: userSelf.email,
+                                username: userSelf.username
+                            }
+                        };
+
+                        socket.emit('notice', dataObj);
+                    }
+
+                    // Create data to send..
+                    var msgObj = {
+                        type : "ONE",
+                        from : userSelf.email,
+                        to : userSelected.email,
+                        img : e.target.result
+                    };
+                }
+                else if(selectFlag == "BOT") {
+                    processMsgForBOT("ase");
+                    // Create data to send..
+                    var msgObj = {
+                        type : "ONE",
+                        from : userSelf.email,
+                        to : userSelected.email,
+                        img : e.target.result
+                    };
+                }
+                else if(selectFlag == "ONE") {
                     // Create data to send..
                     var msgObj = {
                         type : "ONE",
@@ -805,6 +838,10 @@ function action_addToContact() {
     $('#btn-addToContact').click();
 }
 
+
+function sendImage() {
+    outConsole("Image load", "clicked");
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Remove a person..
@@ -1165,6 +1202,9 @@ function selectGrpFromList(grpID, grpName){
     var users = parentUl.children('li');
     var user = users.get(0);
 
+    // Clear message contents..
+    $('#messages').html('');
+
     // Set grp to select..
     for(var i = 0; i < users.length; i++) {
         user = users.get(i);
@@ -1213,6 +1253,9 @@ function selectUserFromList(name, email, id, type){
     var parentUl = $('.user-content').children('ul');
     var users = parentUl.children('li');
     var user = users.get(0);
+
+    // Clear message contents..
+    $('#messages').html('');
 
     // Set user to select..
     for(var i = 0; i < users.length; i++) {
@@ -1284,6 +1327,9 @@ function selectBotFromList(){
     var users = parentUl.children('li');
     var user = users.get(0);
 
+    // Clear message contents..
+    $('#messages').html('');
+
     // Set user to select..
     for(var i = 0; i < users.length; i++) {
         user = users.get(i);
@@ -1315,6 +1361,9 @@ function selectConciergeFromList(){
     var parentUl = $('.user-content').children('ul');
     var users = parentUl.children('li');
     var user = users.get(0);
+
+    // Clear message contents..
+    $('#messages').html('');
 
     // Set user to select..
     for(var i = 0; i < users.length; i++) {
@@ -1597,7 +1646,7 @@ function connectChatBot() {
 // Send message enter function..
 function keyEventMessage(e){
     var event1 = e || window.event;
-    if(event1.keyCode == 10){
+    if(event1.keyCode == 13){
         $('#sendMsg').click();
         e.preventDefault();
     }

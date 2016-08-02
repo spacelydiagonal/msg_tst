@@ -416,7 +416,9 @@ io.on('connection', function(socket) { //on first connection
          }
         */
 
-        sendMessageToOne('imgToOne', msgObj, msgObj.to);
+        if(msgObj != null) {
+            sendMessageToOne('imgToOne', msgObj, msgObj.to);
+        }
     });
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////

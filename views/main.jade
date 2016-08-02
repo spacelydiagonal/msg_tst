@@ -126,7 +126,7 @@ html
                                         .input-group-addon(style="padding-bottom:0px;")
                                             label(style="position:relative;")
                                                 span.glyphicon.glyphicon-picture(style="cursor:pointer;")
-                                                input#sendImage(type="file", title="Send image",value="images",style="display:none;")
+                                                input#sendImage(type="file", onclick="javascript:sendImage();", title="Send image", value="images", accept="image/*", style="display:none;")
                                         span.input-group-btn
                                             button.btn.btn-secondary#sendMsg(type="button",title="Send message") Send
 
