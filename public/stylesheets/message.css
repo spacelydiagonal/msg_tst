@@ -90,7 +90,8 @@
 }
 
 .message-reply .message-content-box .arrow {
-    border-color: transparent transparent transparent #0081fd;
+    /*border-color: transparent transparent transparent #0081fd;*/
+    border-color: transparent transparent transparent transparent;
     right: -15px;
 }
 
@@ -102,7 +103,8 @@
 }
 
 .message-receive .message-content-box .arrow {
-    border-color: transparent #EEE transparent transparent;
+    /*border-color: transparent #EEE transparent transparent;*/
+    border-color: transparent transparent transparent transparent;
     left: -15px;
 }
 

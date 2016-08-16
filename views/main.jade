@@ -7,6 +7,10 @@ html
         link(rel='stylesheet', href='/stylesheets/main.css')
         script(src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js")
         script(src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js")
+        link(href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css", rel="stylesheet")
+        script(src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js")
+        script(src="/dropzone/dropzone.js")
+        link(rel='stylesheet', href='/dropzone/dropzone.css')
 
     body
         link(rel='stylesheet', href='/stylesheets/sco.message.css')
@@ -97,11 +101,20 @@ html
                     .panel.panel-primary
                         .panel-heading(style="padding: 0px;")
                             div
-                                .div
+                                .div.pull-left(style="min-width: 70%;")
                                     div(style="text-align: center; font-weight: bold; padding-top: 15px;")
                                         span#span-mainTitle Test1
                                     div(style="text-align: center; margin-top: -4px;")
                                         span#span-subTitle(style="font-size: 12px;") Messenger
+
+                                .dropdown.pull-right(style="padding-top : 7px; padding-right: 10px;")
+                                        .div.pull-right
+                                            img#selfinfo-image(src="/images/man.png" style="float: right; height: 40px; width: 40px;")
+                                        .div.pull-right(style="padding-right: 5px;")
+                                            .name(style="text-align: center;")#selfinfo-name Name
+                                            .mood(style="text-align: center; color: #a0a0a0;")#selfinfo-mood Mood for asdfasdfas
+
+
                                 .dropdown.pull-right(style="margin-top: -30px; padding-right: 20px; display: none;", title="Add to your contact")
                                     a(href="#", data-toggle="dropdown").dropdown-toggle
                                         img(src="/images/plus.png", style="width: 20px; height: 20px;" )
@@ -122,55 +135,92 @@ html
                                         .input-group-addon(style="padding-bottom:0px;")
                                             label(style="position:relative;")
                                                 span.glyphicon.glyphicon-paperclip(style="cursor:pointer;")
-                                                input#sendFile(type="file", title="Send files",value="files",style="display:none;")
+                                                input#btn-sendFile(type="file", title="Send files",value="files", style="display:none;")
                                         .input-group-addon(style="padding-bottom:0px;")
                                             label(style="position:relative;")
                                                 span.glyphicon.glyphicon-picture(style="cursor:pointer;")
-                                                input#sendImage(type="file", onclick="javascript:sendImage();", title="Send image", value="images", accept="image/*", style="display:none;")
+                                                input#btn-sendImg(type="file", title="Send image", value="images", accept="image/*", style="display:none;")
                                         span.input-group-btn
                                             button.btn.btn-secondary#sendMsg(type="button",title="Send message") Send
 
                             .panel-infobody.pull-right
-                                .div#panel-userinfodiv(style="height: 80%")
+                                .self-panel#self-info
+                                    .board-panel#board-panel
+                                        .board-item#board-item
+                                            div
+                                                .pitem-title#pitem-title Title of item
+                                                .dropdown.pitem-dropdown#settings
+                                                    a.dropdown-toggle(href="#", data-toggle="dropdown", style="color: #428bca;")
+                                                        span.glyphicon.glyphicon-list
+                                                    ul.dropdown-menu(role='menu', aria-labelledby='dropdownMenu')
+                                                        li
+                                                            a(onclick="javascript:refreshContactList(contactList);", tabindex='-1', style="cursor: default; display: list-item;")
+                                                                span.glyphicon.glyphicon-open.dropdown-icon
+                                                                span.dropdown-text Go into
+                                                        li.divider
+                                                        li
+                                                            a(onclick="javascript:inviteUser();", tabindex='-1', style="cursor: default; display: list-item;")
+                                                                span.glyphicon.glyphicon-edit.dropdown-icon
+                                                                span.dropdown-text Edit
+                                                        li
+                                                            a(onclick="javascript:showSearchBar();", tabindex='-1', style="cursor: default; display: list-item;")
+                                                                span.glyphicon.glyphicon-remove.dropdown-icon
+                                                                span.dropdown-text Remove
+
+                                            a.pitem(href="/")
+                                                .pitem-content#pitem-content
+                                                    .pitem-mainimg#pitem-mainimg
+                                                    .pitem-subimg#pitem-subimg1
+                                                    .pitem-subimg#pitem-subimg2(style="margin-left: 5px; margin-right: 5px;")
+                                                    .pitem-subimg#pitem-subimg3
+
+                                    .img-panel#img-panel(style="display: none;")
+                                        .img-item#img-item(style="display:none;")
+                                            a.iitem(href="#")
+                                                img.img-style(src="/images/test.jpg")
+
+                                    .boardctrl-panel#selfinfo-button-panel
+                                        .board-CtrlButton.pull-left#upto-board(onclick="javascript:action_showImgInfo();", style="display: none;", title="Up to board")
+                                            a(href="#", data-toggle="dropdown").dropdown-toggle
+                                                img.action-button#upto-board-btn(src="/images/up.png")
+                                        .board-CtrlButton.pull-left#add-board(onclick="javascript:action_modal_addBoard();", title="Add new")
+                                            a(href="#", data-toggle="dropdown").dropdown-toggle
+                                                img.action-button#add-board-btn(src="/images/plus.png")
+
+
+
+
+                                .div#panel-userinfodiv
                                     .div#panel-userinfo
                                         .dropdown.pull-right#action-panel1(onclick="javascript:action_addToContact();", style="padding: 20px; padding-left: 10px;", title="Add to your contact")
                                             a(href="#", data-toggle="dropdown").dropdown-toggle
                                                 img.action-button#user-actionbutton1(src="/images/plus.png")
-                                        .dropdown.pull-right#action-panel2(onclick="javascript:action_removeFromContact();", style="padding: 20px; padding-right: 0px;", title="Remove from your contact")
+                                        .dropdown.pull-right#action-panel2(onclick="javascript:action_removeFromContact();", style="padding: 10px; padding-right: 0px;", title="Remove from your contact")
                                             a(href="#", data-toggle="dropdown").dropdown-toggle
                                                 img.action-button#user-actionbutton2(src="/images/minus.png")
 
 
                                         .div.user-info
                                             .div#div-userInfo
-                                                .div(style="padding-top : 20px; padding-left: 20px;")
+                                                .div(style="padding-top : 5px; padding-left: 20px;")
                                                     .user
-                                                        .avatar
+                                                        .avatar.pull-left
                                                             img.info-avatar#userinfo-img(src="/images/man.png")
-                                                            .status.contacted-offline#userinfo-status(style="margin-left: 30px; margin-top: 30px;")
+                                                            .status.contacted-offline#userinfo-status(style="margin-left: 30px; margin-top: -13px;")
                                                         .name#userinfo-name(style="padding-left: 60px; padding-top: 12px") Name
                                             .div(style="padding-top: 10px; padding-left: 20px; word-wrap: break-word; padding-bottom: 5px;")
                                                 .mood#userinfo-mood Mood for thisasdfsdfsadlsaksafdjsadlsafksafjsaflksadfjsalksdfsadjsadlsadkjsadlkjf
-                                        .div#other-infopanel(style="min-height: 75%")
+                                        .div#other-infopanel(style="overflow-y: scroll;")
                                             .div#other-info
                                                 ul
-                                                    li(style="display: list-item; min-height: 50px; margin-left: -30px; padding-top: 5px; border-bottom: 1px solid #e8e8e8;")
-                                                        .user
-                                                            .avatar
+                                                    li(style="display: list-item; margin-left: 0px; padding-top: 5px; border-bottom: 1px solid #f5f5f5;")
+                                                        .user.pull-left
+                                                            .avatar.pull-left
                                                                 img.info-avatar(src="/images/man.png")
                                                                 .status.offline(style="margin-left: 30px; margin-top: 30px;")
                                                             .name(style="padding-left: 50px; padding-top: 10px;") Name
 
-                                .self-panel#self-info
-                                    .div(style="text-align: center; font-weight: bold; padding-top: 2px;") Login user Information
-                                    .div(style="padding-top : 3px; padding-left: 10px;")
-                                        .user
-                                            .avatar
-                                                img.info-avatar#selfinfo-img(src="/images/man.png")
-                                                .status.away-offline#selfinfo-status(style="margin-left: 30px; margin-top: 30px;")
-                                            .name#selfinfo-name(style="padding-left: 60px; padding-top: 12px") Name
-                                    .div(style="padding-top: 10px; padding-left: 20px; word-wrap: break-word; padding-bottom: 5px;")
-                                        .mood#selfinfo-mood Mood for thisasdfsdfsadlsaksafdjsadlsafksafjsaflksadfjsalksdfsadjsadlsadkjsadlkjf
+
 
 
                         //.panel-footer
@@ -204,40 +254,163 @@ html
                         input.btn.btn-secondary#btn-setName(type="button",value="Accept")
 
         .modal.fade#inviteModel(tabindex="-1")
-                .modal-dialog
-                    .modal-content
-                        .modal-header
-                            h4.modal-title#inviteLabel Invite your friend to the chat!
-                        .modal-body
-                            .form-group
-                                .input-group
-                                    .input-group-addon Email
-                                    input.form-control#input-inviteEmail(type="email", placeholder="Mail to invite here", onkeydown="javascript:keyEventInvite(event);")
-                        .modal-footer
-                            //input.form-controll#userEmail(type="text", value="#{userInfo.username}")
-                            input.btn.btn-secondary#btn-inviteUser(type="button", value="Invite")
-                            label#inviteStatus(style="float:left;")
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        h4.modal-title#inviteLabel Invite your friend to the chat!
+                    .modal-body
+                        .form-group
+                            .input-group
+                                .input-group-addon Email
+                                input.form-control#input-inviteEmail(type="email", placeholder="Mail to invite here", onkeydown="javascript:keyEventInvite(event);")
+                    .modal-footer
+                        //input.form-controll#userEmail(type="text", value="#{userInfo.username}")
+                        input.btn.btn-secondary#btn-inviteUser(type="button", value="Invite")
+                        label#inviteStatus(style="float:left;")
 
         .modal.fade#addGroupModel(tabindex="-1")
-                    .modal-dialog
-                        .modal-content(style="background-color: #f8f8f8;")
-                            .modal-header
-                                h4.modal-title#myModalLabel1 Add Chat Group
-                                .input-group
-                                    .input-group-addon Group Name
-                                    input.form-control#input-grpName(type="text", placeholder="Group name here")
-                            .modal-body
-                                .msg-list-body.grp-content
-                                    ul
-                                        li(id="liID", style="display: none;")
-                                            .user
-                                                .avatar
-                                                    img(src="/images/man.png")
-                                                    .status.offline
-                                                .name Name
-                            .modal-footer
-                                input.btn.btn-secondary#btn-AddGrp(type="button", value="Add")
-                                input.btn.btn-secondary#btn-CancelGrp(type="button", value="Cancel")
+            .modal-dialog
+                .modal-content(style="background-color: #f8f8f8;")
+                    .modal-header
+                        h4.modal-title#myModalLabel1 Add Chat Group
+                        .input-group
+                            .input-group-addon Group Name
+                            input.form-control#input-grpName(type="text", placeholder="Group name here")
+                    .modal-body
+                        .msg-list-body.grp-content
+                            ul
+                                li(id="liID", style="display: none;")
+                                    .user
+                                        .avatar
+                                            img(src="/images/man.png")
+                                            .status.offline
+                                        .name Name
+                    .modal-footer
+                        .div.pull-left(style="padding-left: 35%; padding-top: 5px;")#txt-addGrpResult
+                        input.btn.btn-secondary#btn-addGrp(type="button", value="Add")
+                        input.btn.btn-secondary#btn-Cancel-addGrp(onclick="javascript:$('#addGroupModel').modal('hide');", type="button", value="Cancel")
+
+        .modal.fade#modal-addImage(tabindex="-1")
+            .modal-dialog
+                .modal-content(style="background-color: #ffffff;")
+                    .modal-header
+                        h4.modal-title(style="text-align: center;") Add new image
+
+                    .panel-addboard-inputgrp
+                        .panel-addboard-label.pull-left Board name
+                        div.form-control.panel-addboard-input#txt-boardName Board Name
+                    .panel-addboard-inputgrp(style="padding: 0")
+                            div#panel-uploadFiles
+                                ul.addImg-ul
+                                    li.addImg-item#imgItem(style="display: list-item")
+                                        div.glyphicon.glyphicon-remove#btn-removeImgFromList(onclick="javascript:removeFromUploading(imgID);", style="float:left; cursor: pointer;")
+                                        div#panel-imageName(style="margin-left: 26px;") This is text
+
+                    .modal-footer
+                        label.pull-left(style="position:relative;")
+                            span.glyphicon.glyphicon-plus-sign(style="cursor:pointer;")
+                            input#btn-addImage(type="file", title="Add image", value="images", accept="image/*", style="display:none;", multiple="true")
+
+                        .div.pull-left(style="padding-left: 30%; padding-top: 5px;")#txt-uploadResult
+                        input.btn.btn-secondary#btn-pinImage(onclick="action_uploadFilesToServer();", type="button", value="Pin to")
+                        input.btn.btn-secondary#btn-Cancel-addImage(onclick="javascript:$('#modal-addImage').modal('hide');", type="button", value="Cancel")
+
+        .modal.fade#modal-imageView(tabindex="-1")
+            .modal-dialog#modal-imageView-body(style="width: 800px;")
+                .modal-content(style="background-color: #ffffff;")
+                    .modal-body
+                        img.img-button#btn-shareToOthers(src="/images/share.png", style="", value="Remove from board", onclick="javascript:action_modal_shareImgToUser();")
+                        img.img-view#img-view(src="/images/man.png")
+                        a#link-downloadImg(href="download")
+                            img.img-button#btn-downloadImg(src="/images/download.png", style="float:left;", value="Download image")
+                        img.img-button#btn-removeImgFromBoard(src="/images/minus.png", style="", value="Remove from board")
+                        img.img-button#btn-addImgToBoard(src="/images/pin.png", style="", value="Add to board")
+
+        .modal.fade#modal-addImgToBoard(tabindex="-1")
+            .modal-dialog#modal-addImgView-body(style="width: 690px;")
+                .modal-content(style="background-color: #ffffff;")
+                    .modal-body
+                        .board-list#panel-board-list
+                            ul
+                                li(style="display:none;")
+                                    .name Name
+
+                            input.btn.btn-secondary#btn-createBoard(onclick="action_createBoard()", type="button", style="float:right;", value="+ Board")
+                            div#panel-board-info(style="height: 50px; padding-left: 20px;")
+                                div Image count : 4
+                                div 4 Collaborators
+
+                        .board-info
+                            img#img-content(src="/images/man.png", style="width: 400px; border: 1px solid #dedede;")
+                            img.img-button#btn-pinToBoard(src="/images/pin.png", onclick="javascript:action_imgPinToBoard();", style="margin-top: -33px; margin-left: 50px;", value="Add to board")
+                            //img.img-button#btn-cancelPinToBoard(src="/images/pin.png", style="margin-top: -33px;", value="Cancel")
+
+        .modal.fade#modal-addBoard(tabindex="-1")
+            .modal-dialog
+                .modal-content(style="background-color: #ffffff;")
+                    .modal-header
+                        h4.modal-title#modalTitle Create new board
+
+                    .panel-addboard-inputgrp
+                        .panel-addboard-label.pull-left Name
+                        input.form-control.panel-addboard-input#input-brdName(type="text", placeholder="Board name here")
+                    .panel-addboard-inputgrp
+                        .panel-addboard-label.pull-left Description
+                        textarea.form-control.panel-addboard-input#input-description(placeholder="Description here")
+                    .panel-addboard-inputgrp
+                        .panel-addboard-label.pull-left(style="padding-right: 2%") Public/Private
+                        input.form-control.panel-addboard-input#chk-public(type="checkbox" data-toggle="toggle", data-width="12%")
+                    .panel-addboard-inputgrp
+                        .panel-addboard-label.pull-left(style="padding-right: 2%") Collaborators
+                        input.form-control.pull-left#input-addCollaborator(type="text",style="width: 50%; background-color: #f3f3f3;", placeholder="Search person as collaborator")
+                        button.btn.btn-secondary.pull-right#btn-removeCollaborator(onclick="javascript:action_removeSelectedUserFromCollaboratorList();", type="button", style="margin-right: 2%; color: #5c5c5f;")
+                            span.glyphicon.glyphicon-minus-sign
+                        button.btn.btn-secondary.pull-right#btn-addCollaborator(onclick="javascript:action_addCollaborator();", type="button", style="margin-right: 1%; color: #4765ab;")
+                            span.glyphicon.glyphicon-plus-sign
+                        .panel-collaborators#panel-collaborators
+                            ul
+
+                    .modal-footer
+                        .div.pull-left(style="padding-left: 35%; padding-top: 5px;")#txt-addResult
+                        input.btn.btn-secondary#btn-addBoard(onclick="javascript:action_addBoardInfo();", type="button", value="Create")
+                        input.btn.btn-secondary#btn-Cancel(onclick="javascript:$('#modal-addBoard').modal('hide');", type="button", value="Cancel")
+
+        .modal.fade#modal-shareImg(tabindex="-1")
+            .modal-dialog
+                .modal-content(style="background-color: #ffffff; width: 600px;")
+                    .modal-header
+                        h4.modal-title#modal-shareTitle Share to..
+
+                    .panel-addboard-inputgrp#modal-shareImgBody(style="min-height: 170px;")
+                        div.pull-right(style="border-radius: 6px; background-color: #f3f3f3; padding: 10px; box-shadow: 1px 2px 6px 0px #c0c0c0;")
+                            img#img-share(src="images/test.jpg", style="width: 300px; min-height: 150px;")
+                        input.form-control.pull-left#input-searchSharePerson(type="text",style="width: 250px; background-color: #f3f3f3;", placeholder="Search person to share", onkeypress="javascript:keyEventSrchSharePerson(event);")
+                        .panel-userlist#panel-contacts(style="width: 250px; min-height: 120px;")
+                            ul(style="padding-left: 15px;")
+
+
+                    .modal-footer
+                        input.btn.btn-secondary#btn-Share(onclick="javascript:action_shareImgToUser();", type="button", value="Share")
+                        input.btn.btn-secondary#btn-cancelShare(onclick="javascript:$('#modal-shareImg').modal('hide');", type="button", value="Cancel")
+
+        .modal.fade#modal-shareToEmail(tabindex="-1")
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        h4.modal-title#invitePersonLabel Share to an Email!
+                    .modal-body
+                        .form-group
+                            .input-group
+                                .input-group-addon Email
+                                input.form-control#input-shareEmail(type="email", placeholder="EMail share to here")
+                    .modal-footer
+                        input.btn.btn-secondary#btn-shareToEmail(type="button", onclick="javascript:action_shareBoardToEmail();", value="Share to")
+                        input.btn.btn-secondary#btn-cancelShareToEmail(type="button", onclick="javascript:$('#modal-shareToEmail').modal('hide');", value="Cancel")
+                        label#shareStatus(style="float:left;")
+
+
+
+
 
     script(src="/socket.io/socket.io.js")
     script(src="/js/messenger.min.js")
