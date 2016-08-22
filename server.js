@@ -1106,7 +1106,12 @@ io.on('connection', function(socket) { //on first connection
                  to: email to receive
             }
         */
-        var transport = nodemailer.createTransport('smtps://timkern0702%40gmail.com:xlaxjs0702@smtp.gmail.com/?pool=true');
+        /*
+        You have to use here your own account.
+        If your gamil is test@gmail.com - > like below..
+         var transport = nodemailer.createTransport('smtps://test%40gmail.com:password@smtp.gmail.com/?pool=true');
+         */
+        var transport = nodemailer.createTransport('smtps://proqueriotest1%40gmail.com:proqueriotest11@smtp.gmail.com/?pool=true');
         var htmlLink = '<h1>Invite you to the chat!</h1><br>' + inviteInfo.from + ' sent you a invite to the chat!<br>'
                         + '<p><a href="http://localhost:8000">Visit page</a></p>';
         var mailOptions = {
@@ -1151,7 +1156,7 @@ io.on('connection', function(socket) { //on first connection
          }
          */
         // var transport = nodemailer.createTransport('smtps://proquerio%40gmail.com:d1YoT6M5Aecy@smtp.gmail.com');
-        var transport = nodemailer.createTransport('smtps://timkern0702%40gmail.com:xlazjs0702@smtp.gmail.com');
+        var transport = nodemailer.createTransport('smtps://proqueriotest1%40gmail.com:proqueriotest11@smtp.gmail.com/?pool=true');
         var htmlLink = '<h1>Invite you to view the board!</h1><br>' + inviteInfo.from + ' sent you a invite to view shared board!<br>'
                         + '<p><a href="http://localhost:8000">Visit page</a></p>';
         var mailOptions = {
@@ -1212,16 +1217,16 @@ io.on('connection', function(socket) { //on first connection
          }
          */
 
-        var transport = nodemailer.createTransport('smtps://proquerio%40gmail.com:d1YoT6M5Aecy@smtp.gmail.com/?pool=true');
+        var transport = nodemailer.createTransport('smtps://proqueriotest1%40gmail.com:proqueriotest11@smtp.gmail.com/?pool=true');
         var htmlLink = '<h1>Please read the message from users!</h1><br>' +
                             noticeInfo.from.username + '(' + noticeInfo.from.email + ')' + ' just sent a message to concierge!<br>'
                             + '<p><a href="http://localhost:8000">Visit page</a></p>';
         var mailOptions = {
             // from: noticeInfo.from,
             // to: noticeInfo.to,
-            from: 'proquerio@gmail.com',
-            // to: noticeInfo.to,
-            to: 'proquerio@gmail.com',
+            from: 'timkern0702@gmail.com',
+            to: noticeInfo.to,
+            // to: 'proquerio@gmail.com',
             subject: "Someone just sent a message to concierge!",
             // text: noticeInfo.from + ' sent you a invite to the chat!!'
             html : htmlLink
