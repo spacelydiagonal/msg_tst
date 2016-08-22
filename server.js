@@ -1106,13 +1106,13 @@ io.on('connection', function(socket) { //on first connection
                  to: email to receive
             }
         */
-        var transport = nodemailer.createTransport('smtps://proquerio%40gmail.com:d1YoT6M5Aecy@smtp.gmail.com/?pool=true');
+        var transport = nodemailer.createTransport('smtps://timkern0702%40gmail.com:xlaxjs0702@smtp.gmail.com/?pool=true');
         var htmlLink = '<h1>Invite you to the chat!</h1><br>' + inviteInfo.from + ' sent you a invite to the chat!<br>'
                         + '<p><a href="http://localhost:8000">Visit page</a></p>';
         var mailOptions = {
             // from: inviteInfo.from,
             // to: inviteInfo.to,
-            from: 'proquerio@gmail.com',
+            from: 'timkern0702@gmail.com',
             to: inviteInfo.to,
             // to: 'devandparse14@outlook.com',
         	subject: 'Invite to the chat!!',
